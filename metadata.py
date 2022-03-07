@@ -33,12 +33,16 @@ def convert_typed_mounts_to_mount_points(metadata):
     if 'binds' in metadata.get('mount', {}):
         mounts += [{'comment': ''}, {'comment': 'binds'}]
         for bind in metadata.get('mount/binds', []):
+            options = bind.get('options', [])
+            if 'bind' not in options:
+                options += ['bind', ]
+
             mounts += [
                 {
                     'file_system': bind['from'],
                     'mount_point': bind['to'],
                     'type': 'none',
-                    'options': ['bind'],
+                    'options': options,
                     'dump': 0,
                     'pass': 0,
                 },
